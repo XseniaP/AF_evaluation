@@ -36,10 +36,10 @@ python3 ./main_wrapper.py 7n4j_L
 You can expect the following output for a single chain: 
 
 (1) files  
-7n4j_L_TM_sup_all_m0 - TM-align output, 
-7n4j_L.json - PyIR output, 
-TM_sup_atm_colorcoded_cartoon.pml - color-coded PyMol file, 
-output.csv - the results for each chain will be added as a separate line on the spreadsheet
+7n4j_L_TM_sup_all_m0 - TM-align output,   
+7n4j_L.json - PyIR output,   
+TM_sup_atm_colorcoded_cartoon.pml - color-coded PyMol file,   
+output.csv - the results for each chain will be added as a separate line in the spreadsheet  
 
 (2) console - below if the example of the output for a single chain (7n4j_L)
 
