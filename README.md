@@ -9,8 +9,8 @@ The script is used to call the externally developed open-source products for ali
 To run this script the following products and their prerequisites should be installed/compiled with the compilation files added to the main project folder:
 
 * (1) **BioPython** - it is used to align the sequences
-* (2) **TM-align** - the TM-align.cpp can be downloaded from the official website (https://zhanggroup.org/TM-align/),following the compilation the executable file should be saved in the root directory of the project under the name "TMalign"
-* (3) **MM-align** - the MM-align.cpp can be downloaded from the official website (https://zhanggroup.org/MM-align/),following the compilation the executable file should be saved in the root directory of the project under the name "MMalign"
+* (2) **TM-align** - the TM-align.cpp can be downloaded from the official website (https://zhanggroup.org/TM-align/ ), following the compilation the executable file should be saved in the root directory of the project under the name "TMalign"
+* (3) **MM-align** - the MM-align.cpp can be downloaded from the official website (https://zhanggroup.org/MM-align/ ), following the compilation the executable file should be saved in the root directory of the project under the name "MMalign"
 * (4) **PyIR** should be installed according to the guidelines found of the official page https://github.com/crowelab/PyIR, "from crowelab_pyir import PyIR" is called in the script. Please note that PyIR requires a set of BLAST germline databases. Please follow the official instructions to set it up
 * (5) **DockQ** -   https://github.com/bjornwallner/DockQ
 * (6) **ABangle** -  https://github.com/wjs20/ABangle/tree/main/abangle
