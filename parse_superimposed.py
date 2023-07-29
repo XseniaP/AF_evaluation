@@ -454,11 +454,6 @@ def convert_aligned_indices(pdb_2, alignment):
             else:
                 temp = 'N' * len(str(temp))
 
-            # if line_set[4] in alignment:
-            #     temp = alignment[line_set[4]]
-            # else:
-            #     temp = 'N' * len(str(line_set[4]))
-
         elif data[i].startswith('END'):
             break
         else:
@@ -469,25 +464,12 @@ def convert_aligned_indices(pdb_2, alignment):
                 temp = 'N' * len(str(temp))
                 # temp = str(line_set[5]) + 'X'
 
-        # count = 0
-        # for j in range(len(line_set2)):
-        #     if line_set2[j] != '':
-        #         count += 1
-        #         if data[i].startswith('TER') & (count == 5):
-        #             n = len(temp) - len(line_set2[j])
-        #             line_set2[j] = temp
-        #             break
-        #         elif count == 6:
-        #             n = len(temp) - len(line_set2[j])
-        #             line_set2[j] = temp
-        #             break
         n = len(temp) - len(line_set2[index2])
         line_set2[index2] = temp
 
         joined_string_1 = " ".join(line_set2[:index1])
         joined_string_2 = " ".join(line_set2[index1:])
 
-        # joined_string = " ".join(line_set2)
         string_base = " " + str(temp) + " "
 
         # e.g. 99 to 99A : 1 space less on the right
@@ -556,21 +538,6 @@ def check_chain_type(temp):
         lc_type = "heavy"
     return lc_type
 
-
-# def cd3_location(dict, chain_type, df, alignment):
-#     start = []
-#     end = []
-#     if chain_type == '':
-#         print("\n the chain is not defined \n")
-#     if chain_type == 'lambda':
-#         start = ['TACTGT']
-#         end = ['GTATTC']
-#     elif chain_type == 'kappa':
-#         start = ['CAACAG']
-#         end = ['TTTCGG']
-#     elif chain_type == 'heavy':
-#         start = ['TGTGC','TGAG']
-#         end = ['TGGGG']
 
 def cd3_location2(dict, chain_type, df, alignment):
     index = 0
@@ -656,13 +623,15 @@ def cd3_location2(dict, chain_type, df, alignment):
 
 
 
-    if 'FR3' in dict:
-        print('\n' + str(dict['FR3']) + '\n')
+    # if 'FR3' in dict:
+    #     print('\n' + str(dict['FR3']) + '\n')
     if 'CDR3' in dict:
         print('\n' + str(dict['CDR3']) + '\n')
-        print('CDR3 is: ' + seq2[cdr3_start_index - 1: cdr3_end_index])
+        cd3seq = seq2[cdr3_start_index - 1: cdr3_end_index]
+        print('CDR3 is: ' + cd3seq)
 
     if dict['CDR3'][0] == 0 or dict['CDR3'][1] == 0:
         del dict['CDR3']
 
-    return dict
+    print(dict)
+    return dict, cd3seq
