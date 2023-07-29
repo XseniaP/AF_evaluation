@@ -2,9 +2,6 @@
 
 This script allows to evalute the prediction quality of the antibody heavy and light chains, to perform the calculations and combine all accuracy evaluation steps into a single pipeline. 
 
-![Figure1_revised](https://github.com/XseniaP/AF_evaluation/assets/50076292/b61ee140-361e-4d7c-a37d-684aef8a440c)
-
-
 The script is used to call the externally developed open-source products for alignment, superimposition, metrics calculation, and visualization, and then parses the results and moves the relevant information to the next step. In addition, the script provides on-demand calculations of the key metrics per domain and color coding, which are not covered by the externally developed packages. 
 
 ## Prerequisites
