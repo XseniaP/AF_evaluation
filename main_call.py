@@ -14,37 +14,6 @@ from rmsd.export_to_spreadsheet import export
 from predict_from_list import copy_files
 from predict_from_list import get_species
 
-# arguments = sys.argv
-#
-# # arg_dict = {}
-# # for i in range(len(arguments)):
-# #     if i%2 != 0:
-# #         key = arguments[i]
-# #     elif (i%2 == 0) & (i != 0):
-# #         arg_dict[key] = arguments[i]
-#
-#
-# # FILE = arg_dict['-fa']
-# # CHAIN = arg_dict['-ch']
-# # PDB_F = arg_dict['-fll']
-# # PDB_PRED = arg_dict['-pr']
-# # PDB_ORIG = arg_dict['-or']
-#
-# # name = "1NCW_L"
-# name = arguments[1]
-#
-# FILE, CHAIN, PDB_F, PDB_PRED, PDB_ORIG = copy_files(name)
-#
-# # create a pdb for this specific chain *\n"
-# parse_superimposed.chain_pdb(PDB_F, PDB_ORIG, CHAIN)
-#
-# # if '-sp' in arg_dict:
-# #     SPECIES = arg_dict['-sp']
-# # else:
-# #     SPECIES = 'human'
-
-
-
 # if __name__ == '__main__':
 def main_call_function(name, FILE, CHAIN, PDB_F, PDB_PRED, PDB_ORIG):
 
@@ -79,17 +48,14 @@ def main_call_function(name, FILE, CHAIN, PDB_F, PDB_PRED, PDB_ORIG):
     " * send the prediction from AlphaFord to TMalign *\n"
     " * parameter 0: sequence independent TMalign, 1: sequence dependent *\n"
     " *********************************************************************\n"
-    # mode = 0
-    mode = 1
+    mode = 0
+    # mode = 1
     out = run_TMalign.run_TMalign(mode, name)
-    # out = run_TMalign.run_TMalign(1)
 
     " *********************************************************************\n"
     " * send the original fasta sequence of the chain to IgBlast and *\n"
     " * get the dictionary with indices of each Ab segment *\n"
     " *********************************************************************\n"
-    # pyirexample = PyIR(query=FILE, args=['--sequence_type', 'prot', '--legacy', '--gzip', 'False', '--germlineV',
-    #                                      './db/human_igh_v'])
 
     if SPECIES == 'human':
     # homo sapiens
@@ -167,15 +133,9 @@ def main_call_function(name, FILE, CHAIN, PDB_F, PDB_PRED, PDB_ORIG):
     df, alignment = parse_superimposed.parse('TM_sup_all')
 
     # these are two options of the alignment: 1 based on the sequence, second one based on TM-align distance alignment
-    # alignment, residues_A, residues_B = parse_superimposed.sw_alignment(df)
     alignment, residues_A, residues_B = parse_superimposed.get_alignment(out, FILE, df)
 
-    # parse_superimposed.convert_aligned_indices(PDB_ORIG, alignment)
-
-    # column = df["Residue_id"]
-    # max_index = column.max()
     max_index = len(df.index)
-    # df["Domain"] = np.nan
     df["Domain"] = 'therest'
     my_list = [None] * int(max_index)
     new_dict = {}
@@ -189,41 +149,59 @@ def main_call_function(name, FILE, CHAIN, PDB_F, PDB_PRED, PDB_ORIG):
 
 
     # add CDR3 to the dict
-    # parse_superimposed.cd3_location(dict, chain_type, df, alignment)
 
+    dict, cdr3seq = parse_superimposed.cd3_location2(dict, chain_type, df, alignment)
+    for key in dict:
+        if key == 'CDR3':
+            x = int(dict[key][0])
+            y = int(dict[key][1])
+
+            # old working version
+            # idx_x = df.index[(df['Residue_id'] == residues_A[x-1]) & (df['Chain'] == 'A')][0]
+            # idx_y = df.index[(df['Residue_id'] == residues_A[y-1]) & (df['Chain'] == 'A')][0]
+
+            # new working version
+            if str(x) in alignment_reverse:
+                x_df = alignment_reverse[str(x)]
+            else:
+                x_df = residues_A[x - 1]
+            if str(y) in alignment_reverse:
+                y_df = alignment_reverse[str(y)]
+            else:
+                y_df = residues_A[y - 1]
+            idx_x = df.index[(df['Residue_id'] == x_df) & (df['Chain'] == 'A')][0]
+            idx_y = df.index[(df['Residue_id'] == y_df) & (df['Chain'] == 'A')][0]
+
+            # idx_x = df.index[(df['Residue_id'] == residues_A[residues_A.index(x)]) & (df['Chain'] == 'A')][0]
+            # idx_y = df.index[(df['Residue_id'] == residues_A[residues_A.index(y)]) & (df['Chain'] == 'A')][0]
+
+            df.loc[(df.index >= idx_x) & (df.index <= idx_y) & (df['Chain'] == 'A'), 'Domain'] = key
+
+    
     classificator = 'Domain'
     rmsd = rmsd_by_segment.rmsd_for_domain(df, alignment, classificator, 'all')
     new_dict['total'] = rmsd
 
-
-    dict = parse_superimposed.cd3_location2(dict, chain_type, df, alignment)
-
-
-
+    fp = open('log.txt', 'a')
+    fp.write(str(dict))
+    fp.write("\n")
+    fp.close()
+    
+    # find RMSD by domain (CDR1/2/3, FR1/2/3)
     for domain in dict:
         rmsd = rmsd_by_segment.rmsd_for_domain(df, alignment, classificator, domain)
         new_dict[domain] = rmsd
     rmsd = rmsd_by_segment.rmsd_for_domain(df, alignment, classificator,  'therest')
     new_dict['therest'] = rmsd
-    # rmsd = rmsd_by_segment.rmsd_for_domain(df, alignment, classificator, 'all')
-    # new_dict['total'] = rmsd
 
-
-    # if 'CDR3' in new_dict:
-    #     del new_dict['CDR3']
-
-
-
-    # print(new_dict)
-    # file = arguments[4]
     file = PDB_ORIG
     df = parse_superimposed.add_secondary(df, PDB_F, CHAIN, residues_A)
     classificator = 'Secondary'
-    # for structure in ['SHEET','HELIX','SSBOND']:
+   
     for structure in ['SHEET', 'HELIX']:
         rmsd = rmsd_by_segment.rmsd_for_domain(df, alignment, classificator, structure)
         new_dict[structure] = rmsd
-    # print(new_dict)
+   
     classificator = 'SSbond'
     for structure in ['SSBOND']:
         rmsd = rmsd_by_segment.rmsd_for_domain(df, alignment, classificator, structure)
