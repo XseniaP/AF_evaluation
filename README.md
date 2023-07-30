@@ -38,7 +38,7 @@ You can expect the following output for a single chain:
 TM_sup_atm_colorcoded_cartoon.pml - color-coded PyMol file,   
 output.csv - the results for each chain will be added as a separate line in the spreadsheet  
 
-(2) console - below if the example of the output for a single chain (7n4j_L)
+(2) console - below is the example of the output for a single chain (7n4j_L)
 
 7n4j_L.fasta L 7n4j.pdb 7n4j_L_ranked_0.pdb 7n4j_L.pdb human
 
