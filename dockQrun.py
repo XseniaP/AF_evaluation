@@ -24,4 +24,4 @@ def rundockq(code, chainsAb, chainsAg, chainsAbNat, chainsAgNat):
     p = subprocess.Popen(cmd, stdout=pr, shell=True)
     # out, err = p.communicate()
 
-rundockq("7sl5", "A B ", "C ", "A B ", "C ")
+# rundockq("7sl5", "A B ", "C ", "A B ", "C ")
