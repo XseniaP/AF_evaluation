@@ -30,8 +30,7 @@ if __name__ == '__main__':
             fp.write(str(name) + "\n")
             fp.close()
             continue
-
-
+    sys.exit(0)
 
 
 
